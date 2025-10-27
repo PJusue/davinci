@@ -1,0 +1,30 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Regex for conventional commit format
+commit_msg_regex='^(feat|fix|docs|style|refactor|perf|test|chore|ci)(\(.+\))?: .{1,}'
+
+# Get the commit message (first line)
+commit_msg=$(head -n 1 "$1")
+
+# Check if commit message matches the pattern
+if ! echo "$commit_msg" | grep -qE "$commit_msg_regex"; then
+  echo ""
+  echo "❌ Invalid commit message format!"
+  echo ""
+  echo "Commit messages must follow the Conventional Commits specification:"
+  echo ""
+  echo "  <type>(<scope>): <subject>"
+  echo ""
+  echo "Examples:"
+  echo "  feat(converter): add support for Azure resources"
+  echo "  fix(api): handle timeout errors in Claude API"
+  echo "  docs(readme): update installation instructions"
+  echo ""
+  echo "Valid types: feat, fix, docs, style, refactor, perf, test, chore, ci"
+  echo ""
+  echo "Your commit message:"
+  echo "  $commit_msg"
+  echo ""
+  exit 1
+fi
